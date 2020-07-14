@@ -1,4 +1,4 @@
-package main
+package baiwang
 
 import (
 	"bytes"
