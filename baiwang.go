@@ -259,8 +259,9 @@ func (c *Client) ApplyElectronicInvoice(data *ApplyElectronicInvoiceData) (invoi
 	}
 	defer func() { _ = resp.Body.Close() }()
 	respB64Data, _ := ioutil.ReadAll(resp.Body)
-	respData := make([]byte, b64.StdEncoding.DecodedLen(len(respB64Data))-1)
+	respData := make([]byte, b64.StdEncoding.DecodedLen(len(respB64Data)))
 	_, _ = b64.StdEncoding.Decode(respData, respB64Data)
+	respData = trimRightBytes(respData)
 	resDoc := etree.NewDocument()
 	resDoc.ReadSettings.CharsetReader = defaultCharsetRender
 	if err := resDoc.ReadFromBytes(respData); err != nil {
