@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/beevik/etree"
@@ -83,6 +84,7 @@ type (
 		Secret     string
 		VerifyCode string
 		Backup     string
+		TotalFee   float64
 	}
 )
 
@@ -233,7 +235,7 @@ func (c *Client) GetAccessToken() (string, error) {
 }
 func (c *Client) ApplyElectronicInvoice(data *ApplyElectronicInvoiceData) (invoice *Invoice,
 	err error) {
-	totalFee := 1.0
+	totalFee := data.TotalFee
 	taxRate := 0.06
 	goodTotalFee := totalFee / (1 + taxRate)
 	data.SellerTaxpayerID = c.AppID
@@ -288,7 +290,7 @@ func (c *Client) ApplyElectronicInvoice(data *ApplyElectronicInvoiceData) (invoi
 		DeviceID:   invoiceDetailEle.SelectElement("JQBH").Text(),
 		VerifyCode: invoiceDetailEle.SelectElement("JYM").Text(),
 		Backup:     invoiceDetailEle.SelectElement("BZ").Text(),
-		Date:       time.Time{},
+		TotalFee:   data.TotalFee,
 	}
 	invoice.Date, _ = time.Parse("20060102150405", invoiceDetailEle.SelectElement("KPRQ").Text())
 	return invoice, nil
@@ -314,7 +316,7 @@ func (c *Client) DownloadElectronicInvoice(ak string, invoice *Invoice) (url str
 	invoiceNumber := temp2.CreateElement("FP_HM")
 	invoiceNumber.SetText(invoice.Number)
 	totalFee := temp2.CreateElement("JSHJ")
-	totalFee.SetText("1")
+	totalFee.SetText(strconv.FormatFloat(invoice.TotalFee, 'g', 6, 64))
 	date := temp2.CreateElement("KPRQ")
 	date.SetText(invoice.Date.Format("2006010215"))
 	buf := new(bytes.Buffer)

@@ -1,0 +1,37 @@
+func main() {
+const (
+appID      = "50012345671180277"
+sellerName = "上海百旺测试开票"
+appKey     = "07DB492A6CB8861200FEF3F0AC5FB3FA079B6E616826A63A074D4BEC1DC936F9252413F274869367AB28C412FB26B612066F5DC16077FB436C6771913D583735BE15FDF32FB6936F7AC5D0BDD3812154"
+)
+client := NewClient(appID, appKey, sellerName)
+applyInvoiceData := &ApplyElectronicInvoiceData{
+ReqID:                 strconv.FormatInt(time.Now().Unix(), 10),
+TaxType:               TaxTypeCommon,
+InvoiceType:           InvoiceTypeBlue,
+SellerAddressAndPhone: "上海市xxx路xx号）18011112222",
+SellerBankNumber:      "农业银行xx支行 13123123123123123",
+BuyerName:             "个人",
+Drawer:                "吴大伟",
+TotalFee:              1.0,
+TaxLineType:           TaxLineTypeNormal,
+ProjectName:           "信息服务",
+GoodCode:              "3070101000000000000",
+Preferential:          PreferentialTypeFalse,
+}
+ak, err := client.GetAccessToken()
+if err != nil {
+panic(err)
+}
+log.Println(ak)
+invoice, err := client.ApplyElectronicInvoice(applyInvoiceData)
+if err != nil {
+panic(err)
+}
+log.Println(invoice)
+url, err := client.DownloadElectronicInvoice(ak, invoice)
+if err != nil {
+panic(err)
+}
+log.Println(url)
+}
