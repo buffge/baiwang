@@ -64,6 +64,7 @@ type (
 		BuyerAddressAndPhone  string      // 购买方地址、电话
 		BuyerBankNumber       string      // 购买方银行账号
 		BuyerEmail            string      // 购买方邮箱
+		Backup                string      // 备注
 		Drawer                string      // 开票人
 		TotalFee              float64     // 价税合计 单位:元
 		GoodTotalFee          float64     // 商品价格 单位:元
@@ -147,7 +148,8 @@ func generateApplyElectronicInvoiceXml(d *ApplyElectronicInvoiceData) *etree.Doc
 	taxTotalFee := temp2.CreateElement("HJSE")
 	taxTotalFee.SetText(fmt.Sprintf("%.2f", d.TaxTotalFee))
 	temp2.CreateElement("KCE")
-	temp2.CreateElement("BZ")
+	backup := temp2.CreateElement("BZ")
+	backup.SetText(d.Backup)
 	codeTableVersion := temp2.CreateElement("BMB_BBH")
 	codeTableVersion.SetText(d.CodeTableVersion)
 	temp3 := temp1.CreateElement("COMMON_FPKJ_XMXXS")
