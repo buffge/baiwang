@@ -59,7 +59,11 @@ type (
 		SellerName            string      // 销售方名称
 		SellerAddressAndPhone string      // 销售方地址、电话
 		SellerBankNumber      string      // 销售方银行账号
+		BuyerTaxNo            string      // 购买方税号
 		BuyerName             string      // 购买方名称
+		BuyerAddressAndPhone  string      // 购买方地址、电话
+		BuyerBankNumber       string      // 购买方银行账号
+		BuyerEmail            string      // 购买方邮箱
 		Drawer                string      // 开票人
 		TotalFee              float64     // 价税合计 单位:元
 		GoodTotalFee          float64     // 商品价格 单位:元
@@ -120,11 +124,14 @@ func generateApplyElectronicInvoiceXml(d *ApplyElectronicInvoiceData) *etree.Doc
 	sellerAddressAndPhone.SetText(d.SellerAddressAndPhone)
 	sellerBankNumber := temp2.CreateElement("XSF_YHZH")
 	sellerBankNumber.SetText(d.SellerBankNumber)
-	temp2.CreateElement("XSF_LXFS")
-	temp2.CreateElement("GMF_NSRSBH")
+	buyerEmail := temp2.CreateElement("XSF_LXFS")
+	buyerEmail.SetText(d.BuyerEmail)
+	buyerTaxNo := temp2.CreateElement("GMF_NSRSBH")
+	buyerTaxNo.SetText(d.BuyerTaxNo)
 	buyerName := temp2.CreateElement("GMF_MC")
 	buyerName.SetText(d.BuyerName)
-	temp2.CreateElement("GMF_DZDH")
+	buyerAddressAndPhone := temp2.CreateElement("GMF_DZDH")
+	buyerAddressAndPhone.SetText(d.BuyerAddressAndPhone)
 	temp2.CreateElement("GMF_YHZH")
 	temp2.CreateElement("GMF_LXFS")
 	drawer := temp2.CreateElement("KPR")
